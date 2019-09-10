@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aowin.dao.BicycleStationMapper">
+  <select id="select" parameterType="com.aowin.model.BicycleStation" resultType="com.aowin.model.BicycleStation">
+  	select
+  		station_id stationId,
+  		station_code stationCode,
+  		station_name stationName,
+  		longitude,
+  		latitude,
+  		bicycle_pile_num bicyclePileNum,
+  		address,
+  		person_in_charge personInCharge,
+  		build_time buildTime,
+  		run_time runTime,
+  		user_id userId,
+  		create_time createTime,
+  		remark
+  	from
+  		bicycle_station
+  	<where>
+  		<if test="stationCode != null and stationCode != ''">
+  			and station_code like concat('%',#{stationCode},'%')
+  		</if>
+  		<if test="stationName != null and stationName != ''">
+  			and station_name like concat('%',#{stationName},'%')
+  		</if>
+  		<if test="address != null and address != ''">
+  			and address like concat('%',#{address},'%')
+  		</if>
+  	</where>
+  </select>
+  
+  
+  <select id="detailForUpdate" parameterType="java.lang.Integer" resultMap="stationDetailForUpdate">
+  	select
+  		s.station_id ,
+  		station_code ,
+  		station_Name ,
+  		longitude,
+  		latitude,
+  		bicycle_Pile_Num ,
+  		s.address,
+  		person_In_Charge ,
+  		build_Time ,
+  		run_Time ,
+  		s.remark,
+  		pile_Id ,
+  		p.station_id,
+  		p.vender_id ,
+  		pile_Code ,
+  		status,
+  		install_Time ,
+  		disassembly_time ,
+  		p.remark pileRemark,
+  		v.vender_name ,
+  		p.operator_time,
+  		bicycle_id
+  	from
+  		bicycle_station s left join bicycle_pile p
+  	on
+  		s.station_id = p.station_id
+  	left join
+  		vender v
+  	on
+  		p.vender_id = v.vender_id
+  	where
+  		s.station_id = #{stationId}
+  </select>
+  <resultMap type="com.aowin.model.BicycleStation" id="stationDetailForUpdate">
+  	<id column="station_id" property="stationId"/>
+  	<result column="station_code" property="stationCode"/>
+  	<result column="station_Name" property="stationName"/>
+  	<result column="longitude" property="longitude"/>
+  	<result column="latitude" property="latitude"/>
+  	<result column="bicycle_Pile_Num" property="bicyclePileNum"/>
+  	<result column="address" property="address"/>
+  	<result column="person_In_Charge" property="personInCharge"/>
+  	<result column="build_Time" property="buildTime"/>
+  	<result column="run_Time" property="runTime"/>
+  	<result column="remark" property="remark"/>
+  	<collection property="piles" ofType="com.aowin.model.BicyclePile">
+  		<id column="pile_Id" property="pileId"/>
+	  	<result column="vender_id" property="venderId"/>
+	  	<result column="pile_Code" property="pileCode"/>
+	  	<result column="status" property="status"/>
+	  	<result column="install_Time" property="installTime"/>
+	  	<result column="disassembly_time" property="disassemblyTime"/>
+	  	<result column="pileRemark" property="remark"/>
+	  	<result column="vender_name" property="venderName"/>
+	  	<result column="operator_time" property="operatorTime"/>
+	  	<result column="bicycle_id" property="bicycleId"/>
+  	</collection>
+  
+  </resultMap>
+  
+
+  
+</mapper>

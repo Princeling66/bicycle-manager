@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aowin.dao.BicycleInfoMapper">
+
+  
+  <update id="updateInfo" parameterType="int">
+  	update 
+  		bicycle_info 
+  	set
+  		status = 4,
+  		pile_Id =null
+  		
+  	where
+  		bicycle_id = #{bicycleId} and status = 3
+ 
+  </update>
+  <select id="select" resultType="com.aowin.model.BicycleInfo" >
+  select 
+  		bicycle_id bicycleId,
+  		bicycle_code bicycleCode,
+  		status,
+  		pile_id pileId,
+  		destory_date destoryDate,
+  		user_id userId,
+  		operator_time operatorTime,
+  		card_id cardId,
+  		remark
+   from 
+   		Bicycle_Info 
+   where 
+   		status=4
+  </select>
+    <update id="toInfo" parameterType="com.aowin.model.BicycleAccount">
+  	update 
+  		bicycle_info
+  	set
+  		status = 5,
+  		pile_Id =#{pileId}
+  	where
+  		bicycle_id = #{bicycleId}
+ 
+  </update>
+  
+</mapper>

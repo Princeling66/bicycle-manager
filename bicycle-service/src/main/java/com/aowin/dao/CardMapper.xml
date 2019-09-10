@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace - 对应具体的接口的名字  -->
+<mapper namespace="com.aowin.dao.CardMapper">
+<select id="getCard" resultType="com.aowin.model.Card">
+select 
+		card_id cardId,
+		card_type cardType,
+		card_code cardCode,
+		name,
+		idcard,
+		sex,
+		telphone,
+		mobile,
+		email,
+		address,
+		work,
+		zxbj,
+		monthly_Money monthlyMoney,
+		frozen_Money frozenMoney,
+		wallet_Money walletMoney,
+		status
+from card
+<where>
+<if test="cardCode !=null and cardCode !=''">
+and card_Code like concat('%',#{cardCode},'%')
+</if>
+<if test="name !=null and name !=''">
+and name like concat('%',#{name},'%')
+</if>
+</where>
+</select>
+
+ <insert id="insert" parameterType="com.aowin.model.Card" >
+  	<selectKey keyProperty="cardId" order="AFTER" resultType="int">
+  		select LAST_INSERT_ID()
+  	</selectKey>
+  	insert into 
+  	card 
+  		(card_id,CARD_CODE,CARD_TYPE,NAME,IDCARD,SEX,TELPHONE,MOBILE,EMAIL,
+  		ADDRESS,WORK,ZXBJ,STATUS)
+  	values
+  		(
+  			#{cardId},#{cardCode},#{cardType},#{name},#{idcard},#{sex},
+  			#{telphone},#{mobile},#{email},#{address},
+  			#{work},#{zxbj},#{status}
+  		)
+  </insert>
+  
+  <select id="generateCardCode" resultType="java.lang.String">
+  	select max(CARD_CODE) from card
+  </select>
+
+<update id="update" parameterType="com.aowin.model.Card">
+update Card
+<set>
+<if test="cardType!=null">
+CARD_TYPE=#{cardType},
+</if>
+<if test="name!=null">
+NAME=#{name},
+</if>
+<if test="idcard!=null">
+IDCARD=#{idcard},
+</if>
+<if test="sex!=null">
+SEX=#{sex},
+</if>
+<if test="telphone!=null">
+TELPHONE=#{telphone},
+</if>
+<if test="email!=null">
+EMAIL=#{email},
+</if>
+<if test="address!=null">
+ADDRESS=#{address},
+</if>
+<if test="work!=null">
+WORK=#{work},
+</if>
+</set>
+where
+CARD_CODE=#{cardCode}
+</update>
+<select id="selectByCardCode" parameterType="java.lang.String" resultType="com.aowin.model.Card">
+select card_id cardId,
+		card_type cardType,
+		card_code cardCode,
+		name,
+		idcard,
+		sex,
+		telphone,
+		mobile,
+		email,
+		address,
+		work,
+		zxbj,
+		monthly_Money monthlyMoney,
+		frozen_Money frozenMoney,
+		wallet_Money walletMoney,
+		status
+from 
+		card 
+where 
+		CARD_CODE=#{cardCode}
+
+</select>
+<update id="del" parameterType="java.lang.String">
+update card
+set
+	zxbj='1'
+where
+CARD_CODE=#{cardCode}
+</update>
+<update id="updMoney" parameterType="java.lang.String">
+update card
+set
+		monthly_Money=0,
+		frozen_Money=0,
+		wallet_Money=0
+<where>
+<if test="cardCode!=null and cardCode!=''">
+and CARD_CODE=#{cardCode}
+</if>
+<if test="cardId!=null and cardId!=''">
+and card_id=#{cardId}
+</if>
+</where>
+</update>
+<update id="repCard" parameterType="java.lang.String">
+update card
+set
+	status=2
+where
+CARD_CODE=#{cardCode}
+</update>
+  <update id="updateMoney" parameterType="com.aowin.model.CardAccount">
+  	update card
+  	<set>
+  		<if test="monthlyMoney != null">
+  			monthly_money = monthly_money+#{monthlyMoney},
+  		</if>
+  		<if test="frozenMoney != null">
+  			 frozen_money = frozen_money+#{frozenMoney},
+  		</if>
+  		<if test="walletMoney != null">
+  			 wallet_money = wallet_money+#{walletMoney},
+  		</if>
+  	</set>
+  	<where>
+  		<if test="monthlyMoney != null">
+  			and monthly_money+#{monthlyMoney} >= 0
+  		</if>
+  		<if test="frozenMoney != null">
+  			 and frozen_money+#{frozenMoney} >= 0
+  		</if>
+  		<if test="walletMoney != null">
+  			and wallet_money+#{walletMoney} >= 0
+  		</if>
+  		and card_id = #{cardId}
+  	</where>
+  		
+  	
+  </update>
+<select id="getCardType" resultType="int" parameterType="java.lang.String">
+select card_type from card where card_code=#{cardCode}
+</select>
+
+
+</mapper>

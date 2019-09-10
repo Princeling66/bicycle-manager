@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aowin.dao.SingleCardMapper">
+
+<select id="selOverage" parameterType="int" resultType="double">
+select SUM(MONTHLY_MONEY+WALLET_MONEY)overage FROM CARD where CARD_ID=#{cardId}
+</select>
+
+<select id="selRentTime" parameterType="int" resultType="com.aowin.model.SingleCard">
+SELECT 
+	sum(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) rentHour,
+	avg(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) rentAverage
+FROM 
+	BICYCLE_RECORD 
+where 
+	CARD_ID=#{cardId}
+</select>
+
+<select id="selRentTotal" parameterType="int"  resultType="int">
+SELECT COUNT(RECORD_ID) rentTotal FROM BICYCLE_RECORD WHERE RENT_TIME is not null and CARD_ID=#{cardId}
+</select>
+</mapper>

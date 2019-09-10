@@ -1,0 +1,450 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>自行车系统</title>
+
+    <!-- Bootstrap Core CSS -->
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- MetisMenu CSS -->
+		<link href="css/metisMenu.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+		<!-- Custom Fonts -->
+		<link href="css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+		<!-- jQuery -->
+		<script src="js/jquery.min.js"></script>
+
+		<!-- Bootstrap Core JavaScript -->
+		<script src="js/bootstrap.min.js"></script>
+		
+		<!-- Metis Menu Plugin JavaScript -->
+		<script src="js/metisMenu.min.js"></script>
+
+		<!-- Custom Theme JavaScript -->
+		<script src="js/sb-admin-2.min.js"></script>
+		<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript" src="js/vue-resource.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+</head>
+
+<body>
+
+    <div id="wrapper">
+		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">自行车系统</a>
+            </div>
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                      
+                        <li>
+                            <a href="#"><i class="fa fa-cog fa-fw"></i>车辆业务<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="rent.html">车辆租还业务</a>
+                                </li>
+                                <li>
+                                    <a href="#">车辆维修业务</a>
+                                </li>
+                                 <li>
+                                    <a href="station.html">车辆调度业务</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                    </ul>
+                </div>
+               
+            </div>
+           
+        </nav>
+
+
+		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">车辆调度业务</h1>
+					<button class="btn btn-primary"
+						data-toggle="modal" data-target="#addDiv">新增车点</button>
+					<br /> <br />
+					<div v-show="type!=1"
+						:class="{alert:true,'alert-success':type==2,'alert-danger':type==3}">
+						{{type==2?"操作成功":"操作失败，请联系管理员"}}</div>
+
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">车点列表</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<div id="dataTables-example_wrapper"
+								class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+								<div class="row">
+
+									<div class="col-sm-12">
+										<div id="dataTables-example_filter" class="dataTables_filter">
+											<label> 车点名字: <input type="text"
+												v-model.trim.lazy="stationName"
+												class="form-control input-sm"
+												aria-controls="dataTables-example"></label> 
+												<label>
+												车点地址： <input type="text" v-model.trim.lazy="address"
+												class="form-control input-sm"
+												aria-controls="dataTables-example">
+											</label>
+											<button type="button" class="btn btn-primary"
+												@click="goPage(1)">查询</button>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<table width="100%"
+											class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline"
+											role="grid" aria-describedby="dataTables-example_info"
+											style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th width="">编号</th>
+													<th width="">名称</th>
+													<th width="">经度</th>
+													<th width="">纬度</th>
+													<th width="">车桩数量</th>
+													<th width="">地址</th>
+													<th width="">操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="(item,index) in list"
+													:class="{gradeA:true,even:index%2==0,odd:index%2==1}"
+													role="row">
+													<td class="sorting_1">{{item.stationCode}}</td>
+													<td>{{item.stationName}}</td>
+													<td>{{item.longitude}}</td>
+													<td>{{item.latitude}}</td>
+													<td>{{item.bicyclePileNum}}</td>
+													<td>{{item.address}}</td>
+													<td>
+														<button @click="showPile(item.stationId)" title="详情" type="button" data-toggle="modal"
+															data-target="#detailDiv"
+															class="btn btn-primary btn-circle">
+															<i class="fa fa-list"></i>
+														</button>
+													</td>
+												</tr>
+
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="dataTables_info" id="dataTables-example_info"
+											role="status" aria-live="polite">
+											每页显示{{pageInfo.pageSize}}条，共{{pageInfo.total}}条</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="dataTables_paginate paging_simple_numbers"
+											id="dataTables-example_paginate">
+											<ul class="pagination">
+												<li
+													:class="{paginate_button:true, previous:true, disabled:pageInfo.isFirstPage}"
+													aria-controls="dataTables-example" tabindex="0"
+													id="dataTables-example_previous"><a
+													href="javascript:void(0)"
+													@click="goPage(pageInfo.pageNum-1)">上一页</a></li>
+
+
+												<li v-for="item in pageInfo.navigatepageNums"
+													:class="{paginate_button:true, active:item==pageInfo.pageNum}"
+													aria-controls="dataTables-example" tabindex="0"><a
+													href="javascript:void(0)" @click="goPage(item)">{{item}}</a>
+												</li>
+
+												<li
+													:class="{paginate_button:true, next:true, disabled:pageInfo.isLastPage}"
+													aria-controls="dataTables-example" tabindex="0"
+													id="dataTables-example_next"><a
+													href="javascript:void(0)"
+													@click="goPage(pageInfo.pageNum+1)">下一页</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						</div>
+						</div>
+						
+						</div>
+					
+						<!-- 车桩详情弹出层 -->	
+	<div class="modal fade" id="detailDiv" tabindex="-1" role="dialog"
+							aria-labelledby="myModalLabel" aria-hidden="true"
+							style="display: none;">
+							<div class="modal-dialog" style="width: 1200px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"
+											aria-hidden="true">×</button>
+										<h4 class="modal-title" id="myModalLabel">车桩详情</h4>
+										
+									</div>
+									<div class="modal-body">
+										<div class="col-lg-12">
+											<div class="panel panel-default">
+												<div class="panel-heading">车桩列表</div>
+												<!-- /.panel-heading -->
+												<div class="panel-body">
+													<div class="table-responsive">
+												<!-- 卡号 -->	
+													<div class="row">
+									<div class="col-sm-12">
+										<div id="dataTables-example_filter" class="dataTables_filter">
+											<label> 卡号: <input type="text"
+												v-model.trim.lazy="bicycleAccount.cardCode"
+												class="form-control input-sm"
+												aria-controls="dataTables-example"></label> 
+										</div>
+									</div>
+								</div>
+														<table id="pileTable"
+															class="table table-striped table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th>车桩ID</th>
+																	<th>车桩编号</th>
+																	<th>状态</th>
+																	<th>操作时间</th>
+																	<th>所存车辆</th>
+																	<th>操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																<tr v-for="(item,index) in station.piles"
+																role="row">
+																	<td class="sorting_1">{{item.pileId}}</td>
+																	<td>{{item.pileCode}}</td>
+																	<td>{{item.status==1?"有车":"无车"}}</td>
+																	<td>{{item.operatorTime}}</td>
+																	<td>{{item.bicycleId}}</td>
+																	<td>
+																		<button v-show="item.status==1" @click="from(item.pileId,item.bicycleId)" type='button'
+																			class='btn btn-info'>调出
+																		</button>
+																		<button v-show="item.status==2" @click="showInfo(item.pileId)" type='button'
+																			class='btn btn-success'>调入
+																		</button>
+																		
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+													<!-- /.table-responsive -->
+												</div>
+												<!-- /.panel-body -->
+											</div>
+											<!-- /.panel -->
+										</div>
+										<!-- 车辆详情DIv -->
+										<div class="col-lg-12" style="display:none" id="infoDiv">
+											<div class="panel panel-default">
+												<div class="panel-heading">订单详情</div>
+												<!-- /.panel-heading -->
+												<div class="panel-body">
+													<div class="table-responsive">
+														<table 
+															class="table table-striped table-bordered table-hover">
+															<thead>
+																<tr>
+																	<th>选择</th>
+																	<th>车辆id</th>
+																	<th>车辆编号</th>
+																	<th>车辆状态</th>
+																	<th>所在车桩</th>
+																	<th>操作</th>
+																</tr>
+															</thead>
+															<tbody>
+																 <tr v-for="(item,index) in infoList">
+																	<td><input type="radio" name="index"v-model="checked":value="item.bicycleId"></td>
+																	<td>{{item.bicycleId}}</td>
+																	<td>{{item.bicycleCode}}</td>
+																	<td>{{item.status==4?"普通调出":""}}</td>
+																	<td>{{item.pileId}}</td>
+																	<td><button @click="saveInfo(item.bicycleId)" type='button'
+																			class='btn btn-info'>确定
+																		</button></td>
+																</tr> 
+															</tbody>
+														</table>
+													</div>
+													<!-- /.table-responsive -->
+												</div>
+												<!-- /.panel-body -->
+											</div>
+											<!-- /.panel -->
+										</div>
+										
+
+									</div>
+									<div class="modal-footer">
+									</div>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+						
+						
+						
+						
+						</div>
+						</div>
+					
+
+									
+
+					
+<script type="text/javascript">
+var vm = new Vue({
+	el:"#wrapper",
+	data:{
+		pageInfo:{},
+		list: [],
+		stationName: "",
+		address: "",
+		checked:"",
+		bicycleAccount:{},
+		station:{piles:[]},
+		infoList: [],
+		pileId:"",
+		cardCode:"",
+		type: 1 //1不显示 2成功 3失败
+	},
+	methods:{
+		//刷新页面数据
+		goPage: function(pageNum){
+			var params = {
+					params:{
+						pageNum: pageNum,
+						stationName: this.stationName,
+						address: this.address
+					}
+			}
+			this.$http.get("main/select",params).then(
+					(resp) => {
+						this.pageInfo = resp.body;
+						this.list = resp.body.list;
+					},
+					(resp) => {
+						
+					}
+			);
+		},
+		showPile: function(stationId){
+			this.$http.post("main/showPile",{stationId:stationId},{emulateJSON: true}).then(
+					 (resp) => {
+						 this.station = resp.body;
+					
+					 }
+			);
+		},
+		from :function(pileId,bicycleId){
+			this.bicycleAccount.pileId=pileId;
+			this.bicycleAccount.bicycleId=bicycleId;
+			this.$http.post("main/from",this.bicycleAccount).then(
+					(resp) => {
+						var r = resp.bodyText;
+						//关闭窗口
+						$("#detailDiv").modal('hide');
+						if(r=="success"){
+							//刷新当前 页
+							this.showPile(this.station.stationId);
+							this.type = 2;
+							this.bicycleAccount={};
+						}else{
+							this.type = 3;
+						}
+						setTimeout('vm.type = 1',3000);
+						this.bicycleAccount={};
+					},
+					 (resp) => {
+							//关闭窗口
+							$("#detailDiv").modal('hide');
+							this.type = 3;//失败
+							setTimeout('vm.type = 1',5000);
+						}
+					);
+		},
+		showInfo: function (pileId) {
+			this.pileId=pileId;
+			 console.log('选中车桩为:'+this.pileId);
+			this.$http.get("main/showInfo").then(
+					(resp) => {
+						$("#infoDiv").show();
+						this.infoList = resp.body;
+					}
+			);
+		},
+		saveInfo: function (bicycleId) {
+			this.bicycleAccount.bicycleId=bicycleId;
+			this.bicycleAccount.pileId=this.pileId;
+			this.$http.post("main/saveInfo",this.bicycleAccount).then(
+					(resp) => {
+						var r = resp.bodyText;
+						if(r=="success"){
+							//刷新当前 页
+							$("#infoDiv").hide();
+							this.showPile(this.station.stationId);
+							this.type = 2;
+						}else{
+							$("#detailDiv").modal('hide');
+							this.type = 3;
+						}
+						setTimeout('vm.type = 1',3000);
+						this.bicycleAccount={};
+					},
+					 (resp) => {
+						 $("#detailDiv").modal('hide');
+							this.type = 3;//失败
+							setTimeout('vm.type = 1',5000);
+						}
+			
+			);
+			
+		}
+	},
+	mounted: function(){
+		this.goPage(1);
+	}
+	
+})
+
+
+
+</script>
+
+						
+</body>
+
+</html>

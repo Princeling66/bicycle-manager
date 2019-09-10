@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="">
+<title>办卡</title>
+
+<!-- Bootstrap Core CSS -->
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+
+<!-- MetisMenu CSS -->
+<link href="../css/metisMenu.min.css" rel="stylesheet">
+
+<!-- Custom CSS -->
+<link href="../css/sb-admin-2.min.css" rel="stylesheet">
+
+<!-- Custom Fonts -->
+<link href="../css/font-awesome/css/font-awesome.min.css"
+	rel="stylesheet" type="text/css">
+
+<!-- jQuery -->
+<script src="../js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="../js/bootstrap.min.js"></script>
+
+<!-- Metis Menu Plugin JavaScript -->
+<script src="../js/metisMenu.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="../js/sb-admin-2.min.js"></script>
+
+<script type="text/javascript" src="../js/vue.min.js"></script>
+<script type="text/javascript" src="../js/vue-resource.min.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+</head>
+
+<body>
+	<!--nav  -->
+	<div id="wrapper">
+		<nav class="navbar navbar-default navbar-static-top" role="navigation"
+			style="margin-bottom: 0">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="index.html">自行车系统管理平台</a>
+			</div>
+			<!-- /.navbar-header -->
+
+			<ul class="nav navbar-top-links navbar-right">
+				<li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i>
+						Logout</a>
+			</ul>
+
+			<div class="navbar-default sidebar" role="navigation">
+				<div class="sidebar-nav navbar-collapse">
+					<ul class="nav" id="side-menu">
+
+						<li><a href="#"><i class="fa fa-cog fa-fw"></i>组织机构管理<span
+								class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><a href="#">权限管理</a></li>
+								<li><a href="#">角色管理</a></li>
+								<li><a href="#">人员管理</a></li>
+							</ul> <!-- /.nav-second-level --></li>
+						<li><a href="#"><i class="fa fa-angle-double-right fa-fw"></i>业务信息管理<span
+								class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><a href="#">供应商管理</a></li>
+								<li><a href="card.html">办卡</a></li>
+								<li><a href="#">充值</a></li>
+								<li><a href="#">车点车桩管理</a></li>
+								<li><a href="#">车辆类型管理</a></li>
+
+							</ul> <!-- /.nav-second-level --></li>
+						<li><a href="#"><i class="fa fa-truck fa-fw"></i>车辆业务管理<span
+								class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><a href="#">车辆购入登记</a></li>
+								<li><a href="#">新车入桩登记</a></li>
+								<li><a href="#">维修登记</a></li>
+								<li><a href="#">报废登记</a></li>
+
+							</ul></li>
+						<li><a href="#"><i class="fa  fa-rmb fa-fw"></i>统计报表<span
+								class="fa arrow"></span></a>
+							<ul class="nav nav-second-level">
+								<li><a href="#">车点车辆统计</a></li>
+								<li><a href="#">车点使用率统计</a></li>
+								<li><a href="#">实时卡费用统计</a></li>
+								<li><a href="#">月度年度车辆费用统计</a></li>
+								<li><a href="#">月度年度卡费用统计</a></li>
+
+							</ul></li>
+					</ul>
+				</div>
+
+			</div>
+
+		</nav>
+
+
+		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">车辆购入登记</h1>
+					<button class="btn btn-primary"
+						data-toggle="modal" data-target="#addDiv">新增车辆购入信息</button>
+					<br /> <br />
+					<div v-show="type!=1"
+						:class="{alert:true,'alert-success':type==2,'alert-danger':type==3}">
+						{{type==2?"操作成功":"操作失败，请联系管理员"}}</div>
+
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading" >车辆购入信息列表</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<div id="dataTables-example_wrapper"
+								class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+								
+								<div class="row">
+									<div class="col-sm-12">
+										<table width="100%"
+											class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline"
+											role="grid" aria-describedby="dataTables-example_info"
+											style="width: 100%;">
+											<thead>
+												<tr role="row">
+													<th width="">单据id</th>
+													<th width="">单据编号</th>
+													<th width="">供应商</th>
+													<th width="">购入日期</th>
+													<th width="">购入数量</th>
+													<th width="">总金额</th>
+													<th width="">负责人</th>
+													<th width="">发票号码</th>
+													<th width="">操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="(item,index) in list"
+													:class="{gradeA:true,even:index%2==0,odd:index%2==1}"
+													role="row">
+													<td class="sorting_1">{{item.orderId}}</td>
+													<td class="sorting_1">{{item.orderCode}}</td>
+													<td>{{item.venderName}}</td>
+													<td>{{item.buyDate}}</td>
+													<td>{{item.buyNum}}</td>
+													<td>{{item.buyPrice}}</td>
+													<td>{{item.personInCharge}}</td>
+													<td>{{item.invoiceNo}}</td>
+													<td>
+														<button @click="detail(item.orderId)" title="详情" type="button" data-toggle="modal"
+															data-target="#detailDiv"
+															class="btn btn-primary btn-circle">
+															<i class="fa fa-list"></i>
+														</button>
+													</td>
+												</tr>
+
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<div class="dataTables_info" id="dataTables-example_info"
+											role="status" aria-live="polite">
+											每页显示{{pageInfo.pageSize}}条，共{{pageInfo.total}}条</div>
+									</div>
+									<div class="col-sm-6">
+										<div class="dataTables_paginate paging_simple_numbers"
+											id="dataTables-example_paginate">
+											<ul class="pagination">
+												<li
+													:class="{paginate_button:true, previous:true, disabled:pageInfo.isFirstPage}"
+													aria-controls="dataTables-example" tabindex="0"
+													id="dataTables-example_previous"><a
+													href="javascript:void(0)"
+													@click="goPage(pageInfo.pageNum-1)">上一页</a></li>
+
+
+												<li v-for="item in pageInfo.navigatepageNums"
+													:class="{paginate_button:true, active:item==pageInfo.pageNum}"
+													aria-controls="dataTables-example" tabindex="0"><a
+													href="javascript:void(0)" @click="goPage(item)">{{item}}</a>
+												</li>
+
+												<li
+													:class="{paginate_button:true, next:true, disabled:pageInfo.isLastPage}"
+													aria-controls="dataTables-example" tabindex="0"
+													id="dataTables-example_next"><a
+													href="javascript:void(0)"
+													@click="goPage(pageInfo.pageNum+1)">下一页</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- 新增的弹出层 -->
+						<div class="modal fade" id="addDiv" tabindex="-1" role="dialog"
+							aria-labelledby="myModalLabel" aria-hidden="true"
+							style="display: none;">
+							<div class="modal-dialog" style="width: 1200px;">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal"
+											aria-hidden="true">×</button>
+										<h4 class="modal-title" id="myModalLabel">新增车点</h4>
+									</div>
+									<div class="modal-body">
+										<div class="form-group col-md-6">
+											<label>订单编号</label> 
+											<input
+												v-model.lazy.trim="order.orderCode"
+												placeholder="编号格式：GC000001"
+												class="form-control"
+												/>
+										</div>
+
+										<div class="form-group col-md-6">
+											<label>供应商</label> 
+											<select v-model="order.venderId" class="form-control">
+												<option v-for="i in venderList" :value="i.venderId">
+													{{i.venderName}}
+												</option>
+											</select>
+										</div>
+
+										<div class="form-group col-md-6">
+											<label>购入日期</label> 
+											<input
+												type="date"
+												v-model.lazy.trim="order.buyDate"
+												placeholder="购入日期"
+												class="form-control"/>
+										</div>
+
+										<div class="form-group col-md-6">
+											<label>负责人</label> 
+											<input 
+												v-model.lazy.trim="order.personInCharge"
+												placeholder="负责人"
+												class="form-control"/>
+										</div>
+
+										<div class="form-group col-md-6">
+											<label>发票号码</label> 
+											<input 
+												v-model.lazy.trim="order.invoiceNo"
+												placeholder="发票号码"
+												class="form-control" />
+										</div>
+
+
+										<div class="form-group col-md-6">
+											<label>备注</label> 
+											<input 
+												v-model.lazy.trim="order.remark"
+												placeholder="备注"
+												class="form-control" />
+										</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">取消</button>
+										<button @click="addSave()"  type="button"
+											class="btn btn-primary">保存</button>
+									</div>
+								</div>
+							</div>
+							<!-- /.modal-content -->
+						</div>
+
+
+
+
+
+
+						
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var vm = new Vue({
+			el: "#wrapper",
+			data: {
+				pageInfo:{},
+				list: [],
+				startDay: "",
+				endDay: "",
+				order:{
+					details:[]
+				},
+				type: 1, //1不显示 2成功 3失败
+				orderId: "", 
+				venderList: [],
+				catagoryList:[]
+			},
+			//计算属性
+			computed:{
+				
+			},
+			methods:{
+				
+				//刷新页面数据
+				goPage: function(pageNum){
+					var params = {
+							params:{
+								pageNum: pageNum,
+								startDay: this.startDay,
+								endDay: this.endDay
+							}
+					}
+					this.$http.get(bathPath+"/main/buy/select",params).then(
+							(resp) => {
+								this.pageInfo = resp.body;
+								this.list = resp.body.list;
+							},
+							(resp) => {
+								
+							}
+					);
+				},
+				//新增车辆明细
+				addDetail: function(){
+					var detail = {};
+					this.order.details.push(detail);
+				},
+				delDetail: function(detail){
+					var details = this.order.details;
+					var index = details.indexOf(detail);
+					details.splice(index,1);//删除元素
+				},
+				
+				//保存按钮
+				addSave: function(){
+					url = bathPath+"/main/buy/insert";
+					this.$http.post(url,this.order).then(
+							(resp) => {
+								var r = resp.bodyText;
+								//关闭窗口
+								$("#addDiv").modal('hide');
+								if(r == "success"){
+									//刷新当前 页
+									this.goPage(this.pageInfo.pageNum);
+									this.type = 2;
+								}else{
+									this.type = 3;
+								}
+								setTimeout('vm.type = 1',3000);
+								this.order = {details:[]}
+							},
+							(resp) => {
+								//关闭窗口
+								$("#addDiv").modal('hide');
+								this.type = 3;//失败
+								setTimeout('vm.type = 1',5000);
+							}
+					);
+				},
+				//打开查看详情
+				detail: function(orderId){
+					this.$http.post(bathPath+"/main/buy/detail",{orderId:orderId},{emulateJSON: true}).then(
+						(resp) => {
+							this.order = resp.body;
+						}
+					);
+				}
+			},
+			mounted: function(){
+				this.goPage(1);
+				this.$http.get(bathPath+"/main/buy/venderList").then(
+					(resp) => {
+						this.venderList = resp.body;
+					}
+				);
+				this.$http.get(bathPath+"/main/buy/catagory").then(
+					(resp) => {
+						this.catagoryList = resp.body;
+					}
+				);
+				
+			}
+			
+		});
+		
+		
+	</script>
+
+
+</body>
+
+</html>

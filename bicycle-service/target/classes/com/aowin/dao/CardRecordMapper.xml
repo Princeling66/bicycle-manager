@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aowin.dao.CardRecordMapper">
+  <insert id="insert" parameterType="com.aowin.model.CardRecord" >
+  	<selectKey keyProperty="recordId" order="AFTER" resultType="int">
+  		select LAST_INSERT_ID()
+  	</selectKey>
+  	insert into 
+  	card_record
+  	(card_id,fee_type,chg_monthly_money,chg_wallet_money,chg_frozen_money,create_time,user_id,remark,zxbj)
+  	values
+  	(#{cardId},#{feeType},#{chgMonthlyMoney},
+  	#{chgWalletMoney},#{chgFrozenMoney},
+  	#{createTime},#{userId},#{remark},#{zxbj})
+  	
+  </insert>
+  
+  <select id="selectMonthlyMoneyCount" parameterType="int" resultType="int">
+  	select 
+  		count(*) 
+  	from 
+  		card_record 
+  	where 
+  		card_id = #{cardId}
+  	and 
+  		substr(create_time,1,8) = to_char(sysdate,'yyyy-mm') 
+  	and 
+  		chg_monthly_money is not null
+  </select>
+  <select id="select" parameterType="int" resultType="com.aowin.model.CardRecord">
+ select
+  record_id recordId,
+  card_id cardId,
+  fee_type feeType,
+  chg_monthly_money chgMonthlyMoney,
+  chg_wallet_money chgWalletMoney,
+  chg_frozen_money chgFrozenMoney,
+  create_time createTime,
+  user_id userId,
+  remark,
+  zxbj
+ from
+  card_record
+ where
+  card_id=#{cardId}
+ order by 
+  CREATE_TIME desc
+  </select>
+ <select id="selectMoney" resultType="com.aowin.model.CardRecord">
+ SELECT fee_type feeType,sum(CHG_MONTHLY_MONEY)+sum(CHG_WALLET_MONEY)total FROM CARD_RECORD 
+ where
+ fee_type in(1,3,5)group by fee_type
+</select>
+
+<select id="selectSingle" parameterType="int" resultType="com.aowin.model.CardRecord">
+SELECT fee_type feeType,sum(CHG_MONTHLY_MONEY)+sum(CHG_WALLET_MONEY)total FROM CARD_RECORD 
+where fee_type in(1,3,5)
+AND CARD_ID=#{cardId} group by fee_type;
+</select>
+
+<select id="getMoney" parameterType="com.aowin.model.Time" resultType="com.aowin.model.CardRecord" >
+ SELECT fee_type feeType,
+ sum(CHG_MONTHLY_MONEY)+sum(CHG_WALLET_MONEY)total FROM CARD_RECORD 
+ <where>
+ fee_type in(1,3)
+ <if test="year!=null and year!=''">
+ and year(create_time)=#{year}
+ </if>
+ <if test="month!=null and month!=''">
+ and month(create_time)=#{month}
+ </if>
+</where>
+group by fee_type
+</select>
+
+<select id="getSingleMoney" parameterType="com.aowin.model.Time" resultType="com.aowin.model.CardRecord" >
+ SELECT fee_type feeType,
+ sum(CHG_MONTHLY_MONEY)+sum(CHG_WALLET_MONEY)total FROM CARD_RECORD 
+ <where>
+ fee_type in(1,3)AND CARD_ID=#{cardId}
+ <if test="year!=null and year!=''">
+ and year(create_time)=#{year}
+ </if>
+ <if test="month!=null and month!=''">
+ and month(create_time)=#{month}
+ </if>
+</where>
+group by fee_type
+</select>
+</mapper>

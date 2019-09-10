@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+<title>车辆购入登记</title>
+
+   <!-- Bootstrap Core CSS -->
+		<link href="../css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- MetisMenu CSS -->
+		<link href="../css/metisMenu.min.css" rel="stylesheet">
+
+		<!-- Custom CSS -->
+		<link href="../css/sb-admin-2.min.css" rel="stylesheet">
+
+		<!-- Custom Fonts -->
+		<link href="../css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+		<!-- jQuery -->
+		<script src="../../js/jquery.min.js"></script>
+
+		<!-- Bootstrap Core JavaScript -->
+		<script src="../../js/bootstrap.min.js"></script>
+		
+		<!-- Metis Menu Plugin JavaScript -->
+		<script src="../../js/metisMenu.min.js"></script>
+
+		<!-- Custom Theme JavaScript -->
+		<script src="../../js/sb-admin-2.min.js"></script>
+		
+		<script type="text/javascript" src="../../js/vue.min.js"></script>
+		<script type="text/javascript" src="../../js/vue-resource.min.js"></script>
+		<script type="text/javascript" src="../../js/common.js"></script>
+</head>
+
+<body>
+<!--nav  -->
+<div id="wrapper">
+		<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.html">自行车系统管理平台</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+			 <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+            </ul>
+            
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                      
+                        <li>
+                            <a href="#"><i class="fa fa-cog fa-fw"></i>组织机构管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">权限管理</a>
+                                </li>
+                                <li>
+                                    <a href="#">角色管理</a>
+                                </li>
+                                 <li>
+                                    <a href="#">人员管理</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+                        <li>
+                            <a href="#"><i class="fa fa-angle-double-right fa-fw"></i>业务信息管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">供应商管理</a>
+                                </li>
+                                <li>
+                                    <a href="card.html">办卡</a>
+                                </li>
+                                <li>
+                                    <a href="#">充值</a>
+                                </li>
+                                <li>
+                                    <a href="#">车点车桩管理</a>
+                                </li>
+                                <li>
+                                    <a href="#">车辆类型管理</a>
+                                </li>
+                             
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
+						 <li>
+                            <a href="#"><i class="fa fa-truck fa-fw"></i>车辆业务管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">车辆购入登记</a>
+                                </li>
+                                <li>
+                                    <a href="#">新车入桩登记</a>
+                                </li>
+                                 <li>
+                                    <a href="#">维修登记</a>
+                                </li>
+                                <li>
+                                    <a href="#">报废登记</a>
+                                </li>
+                                             
+                            </ul>
+                        </li>
+						<li>
+                            <a href="#"><i class="fa  fa-rmb fa-fw"></i>统计报表<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="#">车点车辆统计</a>
+                                </li>
+                                 <li>
+                                    <a href="#">车点使用率统计</a>
+                                </li>
+                                <li>
+                                    <a href="#">实时卡费用统计</a>
+                                </li>
+                                <li>
+                                    <a href="#">月度年度车辆费用统计</a>
+                                </li>
+                                <li>
+                                    <a href="#">月度年度卡费用统计</a>
+                                </li>
+                               
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+               
+            </div>
+           
+        </nav>
+
+<!--nav  -->
+    <div id="page-wrapper" style="min-height: 418px;">
+       <!--标题 -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">车辆购入登记</h1>
+            </div>
+            <!-- /.col-lg-12 标题-->
+        </div>
+        <!-- /.row 标题-->
+        <!-- 按钮-->
+        <div class="row">
+         <div class="col-lg-12">
+            <button type="button" class="btn btn-primary">新增车辆购入信息</button>
+        </div>
+      
+        <!-- /.row 按钮-->
+        <!-- 表格 -->
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    车辆购入信息列表
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>单据ID</th>
+                                    <th>单据编号</th>
+                                    <th>供应商</th>
+                                    <th>购入日期</th>
+                                    <th>购入数量</th>
+                                    <th>总金额</th>
+                                    <th>负责人</th>
+                                    <th>发票号码</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td>1</td>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                    <td><button type="button" class="btn btn-primary btn-circle" data-toggle="modal" data-target="#myModal"><i class="fa fa-list"></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                            <!-- 分页 -->
+    
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="dataTables-example_info" role="status" aria-live="polite">Showing 1 to 10
+                of 57 entries</div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
+                <ul class="pagination">
+                    <li class="paginate_button previous disabled" aria-controls="dataTables-example" tabindex="0"
+                        id="dataTables-example_previous"><a href="#">上一页</a></li>
+                    <li class="paginate_button active" aria-controls="dataTables-example" tabindex="0"><a href="#">1</a>
+                    </li>
+                    <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">2</a></li>
+                    <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">3</a></li>
+                    <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">4</a></li>
+                    <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">5</a></li>
+                    <li class="paginate_button " aria-controls="dataTables-example" tabindex="0"><a href="#">6</a></li>
+                    <li class="paginate_button next" aria-controls="dataTables-example" tabindex="0"
+                        id="dataTables-example_next"><a href="#">下一页</a></li>
+                </ul>
+            </div>
+        </div>
+<!-- /.col-sm-6 分页 -->
+                    </div>
+                    <!-- /.table-responsive -->
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

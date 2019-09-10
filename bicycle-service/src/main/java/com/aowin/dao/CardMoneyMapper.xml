@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aowin.dao.CardMoneyMapper">
+<select id="selectRentCard" resultType="int">
+SELECT COUNT(*) FROM CARD
+</select>
+
+<select id="selectRentRecord" resultType="int">
+SELECT COUNT(*) FROM BICYCLE_RECORD br,BICYCLE_INFO bi WHERE br.BICYCLE_ID=bi.BICYCLE_ID AND br.RENT_TIME is not null
+</select>
+
+<select id="selMoney" resultType="double">
+SELECT SUM(MONTHLY_MONEY)+sum(WALLET_MONEY) FROM CARD;
+</select>
+
+<select id="selectRentHour" resultType="int">
+SELECT 
+	sum(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) 
+FROM 
+	BICYCLE_RECORD
+
+</select>
+
+<select id="selRent" resultType="int">
+SELECT COUNT(RECORD_ID) rentTotal FROM BICYCLE_RECORD WHERE RENT_TIME is not null;
+</select>
+
+<select id="getRent" parameterType="com.aowin.model.Time" resultType="int">
+SELECT COUNT(RECORD_ID) rentTotal FROM BICYCLE_RECORD 
+<where>
+RENT_TIME is not null
+<if test="year!=null and year!=''">
+and year(rent_time)=#{year}
+</if>
+<if test="month!=null and month!=''">
+and month(rent_time)=#{month}
+</if>
+</where>
+</select>
+
+<select id="getRentRecord" parameterType="com.aowin.model.Time" resultType="int">
+SELECT COUNT(*) FROM BICYCLE_RECORD 
+<where>
+RENT_TIME is not null
+<if test="year!=null and year!=''">
+and year(rent_time)=#{year}
+</if>
+<if test="month!=null and month!=''">
+and month(rent_time)=#{month}
+</if>
+</where>
+</select>
+<select id="getRentHour" resultType="com.aowin.model.SingleCard" parameterType="com.aowin.model.Time">
+SELECT 
+	sum(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) rentHour,
+	avg(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) rentAverage
+FROM 
+	BICYCLE_RECORD
+<where>
+<if test="year!=null and year!=''">
+and year(rent_time)=#{year}
+</if>
+<if test="month!=null and month!=''">
+and month(rent_time)=#{month}
+</if>
+</where>
+</select>
+
+<select id="selSingleRent" parameterType="com.aowin.model.Time" resultType="int">
+SELECT COUNT(RECORD_ID) rentTotal FROM BICYCLE_RECORD 
+<where>
+ RENT_TIME is not null
+ <if test="year!=null and year!=''">
+and year(rent_time)=#{year}
+</if>
+<if test="month!=null and month!=''">
+and month(rent_time)=#{month}
+</if>
+and CARD_ID=#{cardId}
+ </where>
+</select>
+
+<select id="selSingleRentTime" resultType="com.aowin.model.SingleCard" parameterType="com.aowin.model.Time">
+SELECT 
+	sum(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) rentHour,
+	avg(TIMESTAMPDIFF(hour,RENT_TIME,RETURN_TIME)) rentAverage
+FROM 
+	BICYCLE_RECORD
+<where>
+<if test="year!=null and year!=''">
+and year(rent_time)=#{year}
+</if>
+<if test="month!=null and month!=''">
+and month(rent_time)=#{month}
+</if>
+and CARD_ID=#{cardId}
+</where>
+</select>
+</mapper>
